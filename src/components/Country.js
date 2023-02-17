@@ -1,27 +1,23 @@
 import { useState, useEffect } from "react";
-import Map from "./Map";
-import Country from "./Country";
 
-export default function ShowIP() {
-  const [geolocation, setGeolocation] = useState("");
+export default function Country({ countryCode }) {
+  const [country, setCountry] = useState([]);
   const [connErr, setConnErr] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(
-      `https://geo.ipify.org/api/v2/country,city?apiKey=${process.env.REACT_APP_IPIFY_SECRET}`
-    )
+    fetch(`https://restcountries.com/v3.1/alpha/${countryCode}`)
       .then((response) => response.json())
       .then((data) => {
-        setGeolocation(data);
+        setCountry(data);
         setIsLoading(false);
       })
       .catch(() => {
         setConnErr(true);
         setIsLoading(false);
       });
-  }, []);
+  }, [countryCode]);
 
   if (isLoading) {
     return (
@@ -39,13 +35,12 @@ export default function ShowIP() {
         </div>
       </div>
     );
-  } else if (geolocation.ip.length > 0 && connErr === false) {
+  } else if (country && connErr === false) {
     return (
       <div className="container">
-        <h1 className="my-5">Your IP address: {geolocation.ip}</h1>
-        <div id="map">
-          <Map lat={geolocation.location.lat} lng={geolocation.location.lng} />
-          <Country countryCode={geolocation.location.country} />
+        <h1 className="my-5">Your country: {country[0].name.common}</h1>
+        <div>
+          <img src={country[0].flags.png} alt={country[0].flags.alt}></img>
         </div>
       </div>
     );
@@ -59,8 +54,8 @@ export default function ShowIP() {
     return (
       <div className="my-5">
         <h2>
-          We are very sorry! There was a connection error with our IP finder
-          service provider. Please try again later.
+          We are very sorry! There was a connection error with our country
+          information provider. Please try again later.
         </h2>
       </div>
     );
