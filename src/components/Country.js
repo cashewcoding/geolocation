@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
+import { DateTime } from "luxon";
 
 export default function Country({ countryCode }) {
   const [country, setCountry] = useState([]);
   const [connErr, setConnErr] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  // const [localDateTime] = useState(DateTime.now().toString());
+
+  // console.log(localDateTime);
 
   useEffect(() => {
     setIsLoading(true);
@@ -41,6 +45,18 @@ export default function Country({ countryCode }) {
         <h1 className="my-5">Your country: {country[0].name.common}</h1>
         <div>
           <img src={country[0].flags.png} alt={country[0].flags.alt}></img>
+        </div>
+        <div className="my-5">
+          Your local time:{" "}
+          {DateTime.now()
+            .setLocale("en-GB")
+            .toLocaleString(DateTime.DATETIME_MED)}
+          <br />
+          Greenwich Mean Time:{" "}
+          {DateTime.now()
+            .setZone("Europe/London")
+            .setLocale("en-GB")
+            .toLocaleString(DateTime.DATETIME_MED)}
         </div>
       </div>
     );

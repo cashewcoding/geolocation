@@ -4,7 +4,7 @@ export default function Map({ lat, lng }) {
   return (
     <MapContainer
       center={[lat, lng]}
-      zoom={15}
+      zoom={13}
       scrollWheelZoom={true}
       style={{ height: "400px" }}
     >
